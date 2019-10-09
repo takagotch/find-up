@@ -40,10 +40,150 @@ absoute.fileLink = path.join();
 absolute.directoryLink = path.join();
 
 test.beforeEach(t => {
+  const tmpDir = tempy.directory();
+  t.context.disjoint = tmpDir;
+});
+
+test.afterEach(t => {
+  fs.rmdirSync(t.context.disjoint);
+});
+
+const isWindows = process.platform === 'win32';
+
+test('async (child file)', async t => {
+  const foundPath = await findUp(name.packageJson);
+  
+  t.is(foundPath, absolute.packageJson);
+});
+
+test('sync (child file)', t => {
+  const foundPath = findUp.sync(name.packageJson);
+  
+  t.is(foundPath, absolute.packageJson);
+});
+
+test('async (child directory)', async t => {
+  const foundPath = await findUp(name, fixtureDirectory, {type: 'directory'});
+  
+  t.is(foundPath, absolute.fixtureDirectory);
+});
+
+test('sync (child directory)', t => {
+  const foundPath = findUp.sync(name.fixtureDirectory, {type: 'directory'});
+  
+  t.is(foundPath, absolute.fixtureDirectory);
+});
+
+test('async (explicit type file)', async t => {
+  t.is(await findUp(name.packageJson, {type: 'file'}), absolute.packageJson);
+  t.is(await findUp(name.packageJson, {type: 'directory'}), undefined);
+});
+
+if(!isWindows) {
+  test('async (symbolic links)', async t => {
+    const cwd = absolute.fixtureDirectory;
+    
+    t.is(await findUp(name.fileLink, {cwd}), absolute.fileLink);
+    t.is(await findUp(name.fileLink, {cwd, allowSymlinks: false}), undefined);
+    
+    t.is(await findUp(name.directoryLink, {cwd, type: 'directory'}), absolute.directoryLink);
+    t.is(await findUp(name.directoryLink, {cwd, type: 'directory', allowSymlinks: false}), undefined);
+  });
+  
+  test('sync (symbolic links)', t => {
+    const cwd = absolute.fixtureDirectory;
+    
+    t.is(findUp.sync(name.fileLink, {cwd}), absolute.fileLink);
+    t.is(findUp.sync(name.fileLink, {cwd, allowSymlinks: false}), undefined);
+    
+    t.is(findUp.sync(name.directoryLink, {cwd, type: 'directory'}), absolute.directoryLink);
+    t.is(findUp.sync(name.directoryLink, {cwd, type: 'directory', allowSymlinks: false}), undefined);
+  });
+}
+
+test('async (child file, custom cwd)', async t => {
+  const foundPath = await findUp(name.baz, {
+    cwd: relative.fixtureDirectory
+  });
+  
+  t.is(foundPath, absolute.baz);
+});
+
+test('sync (child file, custom cwd)', t => {
 
 });
 
+test();
 
+test();
+
+test();
+
+test();
+
+test();
+
+test();
+
+test();
+
+test();
+
+test();
+
+test();
+
+test();
+
+test();
+test();
+
+test();
+
+test();
+
+test();
+
+test();
+
+test();
+
+test();
+
+test();
+
+test();
+test();
+
+test();
+
+test();
+
+test();
+
+test();
+
+test();
+test();
+
+test();
+
+test();
+test();
+
+test();
+
+test();
+test();
+
+test();
+
+test();
+test();
+
+test();
+
+test();
 ```
 
 ```
