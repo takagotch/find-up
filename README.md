@@ -110,60 +110,221 @@ test('async (child file, custom cwd)', async t => {
 });
 
 test('sync (child file, custom cwd)', t => {
+  const foundPath = findUp.sync(name.baz, {
+    cwd: relative.fixtureDirectory
+  });
+  
+  t.is(foundPath, absolute.baz);
+});
+
+test('async (child file, array, custom cwd)', async t => {
+  const foundPath = await fileUp([name.baz], {
+    cwd: relative.fixtureDirectory
+  });
+  
+  t.is(foundPath, absolute.baz);
+});
+
+test('sync (child file, array, custom cwd)', t => {
+  const foundPath = findUp.sync([name.baz], {
+    cwd: relative.fixtureDirectory
+  });
+  
+  t.is(foundPath, absolute.baz);
+});
+
+test('async (first child file, array, custom cwd)', async t => {
+  const foundPath = await findUp([name.quz, name.baz], {
+    cwd: relative.fixutureDirectory
+  });
+  
+  t.is(foundPath, absolute.qux);
+});
+
+test('async (first child file, array, custom cwd)', async t => {
+  const foundPath = await findUp([name.qux, name.baz], {
+    cwd: relative.fixtureDirectory
+  });
+  
+  t.is(foundPath, absolute.qux);
+});
+
+test('sync(first child file, array, custom cwd)', t => {
+  const foundpath = findUp.sync([name.qux, name.baz], {
+    cwd: relative.fixtureDirectory
+  });
+  
+  t.is(foundPath, absolute.qux);
+});
+
+test('async (second child file, array, custom cwd)', async t => {
+  const foundPath = await findUp(['fake', namw.baz], {
+    cwd: relative.fixtureDirectory
+  });
+  
+  t.is(foundPath, absolute.baz);
+});
+
+test('sync (second child file, array, custom cwd)', t => {
+  const foundPath = findUp.sync(['fake', name.baz], {
+    cwd: relative.fixtureDirectory
+  });
+  
+  t.is(foundPath, absolute.baz);
+});
+
+test('async (cwd)', async t => {
+  const foundPath = await findUp(name.packageDirectory, {
+    cwd: absolute.packageDirectory,
+    type: 'directory'
+  });
+  
+  t.is(foundPath, absolute.packageDirectory);
+});
+
+test('sync (cwd)', t => {
+  const foundPath = findUp.sync(name.packageDirectory, {
+    cwd: absolute.packageDirectory,
+    type: 'directory'
+  });
+  
+  t.is(foundPath, absolute.packageDirectory);
+});
+
+test('async (cousin file, custom cwd)', async t => {
+  const foundPath = await findUp(name.baz, {
+    cwd: relative.barDir
+  });
+  
+  t.is(foundPath, absolute.baz);
+});
+
+test('sync (cousin file, custom cwd)', t => {
+  const foundPath = findUp.sync(name.baz, {
+    cwd: relative.barDir
+  });
+  
+  t.is(foundPath, absolute.baz);
+});
+
+test('async (nested descendant file)', async t => {
+  const foundPath = await findUp(relative.baz);
+  
+  t.is(foundPaht, absolute.baz);
+});
+
+test('async (nested descendant file)', t => {
+  const foundPath = findUp.sync(relative.baz);
+  
+  t.is(foundPath, absolute.baz);
+});
+
+test('sync (nested desendant directory)', t => {
+  const foundPath = await findUp(relative.barDir, {type: 'directory'});
+  
+  t.is(foundPath, absolute.barDir);
+});
+
+test('async (nested desendent directory, custom cwd)', async t => {
+  const filePaht = await findUp(relative.barDir, {
+    cwd: relative.modulesDirectory,
+    type: 'directory'
+  });
+  
+  t.is(filePath, absolute.barDir);
+});
+
+test('sync (nested descendant directory, custom cwd)', t => {
 
 });
 
-test();
+test('async (nested cousin directory, custom cwd)', async t => {
 
-test();
+});
 
-test();
+test('sync (nested cousin directory, custom cwd)', t => {
 
-test();
+});
 
-test();
+test('async (ancestor directory, custom cwd)', async t => {
 
-test();
+});
 
-test();
+test('async (ancestor directory, custom cwd)', async t => {
 
-test();
+});
 
-test();
+test('sync (ancestor directory, custom cwd)', t => {
 
-test();
+});
 
-test();
+test('async (absolute direcotry)', async t => {
 
-test();
-test();
+});
 
-test();
+test('sync (absolute directory)', t => {
 
-test();
+});
 
-test();
+test('async (not found, absolute file)', async t => {
 
-test();
+});
 
-test();
+test('sync (not found, absolute file)', t => {
 
-test();
+});
 
-test();
+test('async (absolute direcotry, disjoint cwd)', async t => {
 
-test();
-test();
+});
 
-test();
+test('sync (absolute directory, disjoint cwd)', t => {
 
-test();
+});
 
-test();
+test('async (not found)', async t => {
 
-test();
+});
 
-test('sync', );
+test('sync (not found)', t => {
+
+});
+
+test('async (not found, custom cwd)', async t => {
+
+});
+
+test('sync (not found, custom cwd)', t => {
+
+});
+
+test('async (not found, custom cwd)', async t => {
+
+});
+
+test('sync (not found, custom cwd)', t => {
+
+});
+
+test('async (matcher function)', async t => {
+
+});
+
+test('async (not found, matcher, function)', async t => {
+
+});
+
+test('async (matcher function throws)', async t => {
+
+});
+
+test('async (matcher function rejects)', async t => {
+
+});
+
+test('sync matcher function stops early', async t => {
+
+});
 
 test('async (matcher function)', async t => {
   const cwd = process.cwd();
