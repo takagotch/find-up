@@ -163,26 +163,89 @@ test();
 
 test();
 
-test('', );
+test('sync', );
 
 test('async (matcher function)', async t => {
-
+  const cwd = process.cwd();
+  
+  t.is(await findUp(directory => {
+    t.is(directory, cwd);
+    return directory;
+  }, {type: 'directory'}), cwd);
+  
+  t.is(await findUp(() => {
+    return '.';
+  }, {type: 'directory'}), cwd);
+  
+  t.is(await findUp(async () => {
+    return 'package.json';
+  }), path.join(cwd, 'package.json'));
+  
+  t.is(await findUp(() => {
+    return '..';
+  }, {type: 'directory'}), path.join(cwd, '..'));
+  
+  t.is(await findUp(directory => {
+    return (directory !== cwd) && directory;
+  }, {type: 'directory'}), path.join(cwd, '..'));
+  
+  t.is(await findUp(directory => {
+    return (directory === cwd) && 'package.json';
+  }, {cwd: absolute.fixtureDirectory}), absolute.packageJson);
+  
 });
 
 test('async (not found, matcher function)', async t => {
-
+  const cwd = process.cwd();
+  const {root} = path.parse(cwd);
+  const visited = new Set();
+  t.is(await findUp(async directory => {
+    t.is(typeof directory, 'string');
+    const stat = await promisify(fs.stat)(cwd, directory);
+    t.true(stat.isDirectory());
+    t.true((directory === cwd)) || isPathInside(cwd, directory));
+    t.false(visited.has(directory));
+    visited.add(directory);
+  }));
+  t.true(visited.has(cwd));
+  t.true(visited.has(root));
 });
 
 test('async (matcher function throws)', async t => {
-
+  const cwd = process.cwd();
+  const visited = new set();
+  await t.throwsAsync(findUp(directory => {
+    visited.add(directory);
+    throw new Error('Some sync throw');
+  }), {
+    message: 'Some sync throw'
+  });
+  t.true(visited.has(cwd));
+  t.is(visited.size, 1);
 });
 
 test('async (matcher function rejects)', async t => {
-
+  const cwd = process.cwd();
+  const visited = new Set();
+  await t.throwsAsync(findUp(async directory => {
+    visited.add(directory);
+    throw new Error('Some async rejection');
+  }), {
+    message: 'Some async rejection'
+  });
+  t.true(visited.has(cwd));
+  t.is(visited.size, 1);
 });
 
 test('async (matcher function stops early)', async t => {
-
+  const cwd = process.cwd();
+  const visited = new Set();
+  t.is(await findUp(async directory => {
+    visited.add(directory);
+    return findUp.stop;
+  }), undefined);
+  t.true(visited.has(cwd));
+  t.is(visited.size, 1);
 });
 
 test('sync (matcher function)', t => {
