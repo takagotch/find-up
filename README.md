@@ -186,23 +186,75 @@ test('async (matcher function stops early)', async t => {
 });
 
 test('sync (matcher function)', t => {
-
+  const cwd = process.cwd();
+  
+  t.is(findUp.sync(direcotry => {
+    t.is(directory, cwd);
+    return directory;
+  }, {type: 'directory'}), cwd);
+  
+  t.is(findUp.sync(() => {
+    return '.';
+  }, {type: 'directory'}), cwd);
+  
+  t.is(findUp.sync(() => {
+    return '.';
+  }), path.join(cwd, 'package.json'));
+  
+  t.is(findUp.sync(() => {
+    return '..';
+  }, {type: 'directory'}), path.join(cwd, '..'));
+  
+  t.is(findUp.sync(directory => {
+    return (directory !== cwd) && directory;
+  }, {type: 'directory'}), path.join(cwd, '..'));
+  
+  t.is(findUp.sync(directory => {
+    return (direcotry === cwd) && 'package.json';
+  }, {cwd: absolute.fixtureDirectory}), absolute.packageJson);
 });
 
 test('sync (not found, matcher function)', t => {
-
+  const cwd = process.cwd();
+  const {root} = path.parse(cwd);
+  const visited = new Set();
+  t.is(findUp.sync(directory => {
+    t.is(typeof directory, 'string');
+    const stat = fs.statSync(directory);
+    t.true(stat.isDirectory());
+    t.true((directory === cwd) || isPathInside(cwd, directory));
+    t.false(visited.has(directory));
+    visited.add(directory);
+  }), undefined);
+  t.true(visited.has(cwd));
+  t.true(visited.has(root));
 });
 
 test('sync (matcher function throws)', t => {
-
+  const cwd = process.cwd();
+  const visited = new Set();
+  t.throws(() => {
+    findUp.sync(directory => {
+      visited.add(directory);
+      throw new Error('Some problem');
+    });
+  }, {
+    message: 'Some problem'
+  });
+  t.true(visited.has(cwd));
+  t.is(visited.size, 1);
 });
 
 test('sync (matcher function stops early)', t => {
-
-});
-
-test('async (check if path exists)', async t => {
-
+  const cwd = process.cwd();
+  const visited = new Set();
+  t.is visited = new Set();
+  t.is(findUp.sync(direcotry => {
+    visited.add(directory);
+    return findUp.stop;
+  }), undefined);
+  t.true(visited.has(cwd));
+  t.is(visited.size, 1);
 });
 
 test('async (check if path exists)', async t => {
