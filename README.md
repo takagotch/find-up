@@ -163,27 +163,69 @@ test();
 
 test();
 
-test();
-test();
+test('', );
 
-test();
+test('async (matcher function)', async t => {
 
-test();
-test();
+});
 
-test();
+test('async (not found, matcher function)', async t => {
 
-test();
-test();
+});
 
-test();
+test('async (matcher function throws)', async t => {
 
-test();
-test();
+});
 
-test();
+test('async (matcher function rejects)', async t => {
 
-test();
+});
+
+test('async (matcher function stops early)', async t => {
+
+});
+
+test('sync (matcher function)', t => {
+
+});
+
+test('sync (not found, matcher function)', t => {
+
+});
+
+test('sync (matcher function throws)', t => {
+
+});
+
+test('sync (matcher function stops early)', t => {
+
+});
+
+test('async (check if path exists)', async t => {
+
+});
+
+test('async (check if path exists)', async t => {
+  if(!isWindows) {
+    t.true(await findUp.exists(absolute.directoryLink));
+    t.true(await findUp.exists(absolute.fileLink));
+  }
+  
+  t.true(await findUp.exists(absolute.barDir));
+  t.true(await findUp.exists(absolute.packageJson));
+  t.false(await findUp.exists('fake'));
+});
+
+test('sync (check if path exists)', t => {
+  if (!isWindows) {
+    t.true(findUp.sync.exists(absolute.directoryLink));
+    t.true(findUp.sync.exists(absolute.fileLink));
+  }
+  
+  t.true(findUp.sync.exists(absolute.barDir));
+  t.true(findUp.sync.exists(absolute.packageJson));
+  t.false(findUp.sync.exists('fake'));
+});
 ```
 
 ```
